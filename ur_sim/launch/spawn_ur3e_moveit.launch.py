@@ -53,7 +53,6 @@ def generate_launch_description():
     y_arg = DeclareLaunchArgument('y', default_value='0', description='Y position of the robot')
     z_arg = DeclareLaunchArgument('z', default_value='0', description='Z position of the robot')
 
-    # Include Gazebo launch file
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_file),
         launch_arguments={"gz_args": " -r -v 4"}.items(),
@@ -86,7 +85,6 @@ def generate_launch_description():
         ],
     )
 
-    # spawn the robot
     spawn_the_robot = Node(
         package="ros_gz_sim",
         executable="create",
@@ -107,7 +105,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # controller manager
     controller_manager_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
@@ -118,7 +115,6 @@ def generate_launch_description():
         ],
     )
 
-    # Robot state publisher
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -188,17 +184,17 @@ def generate_launch_description():
         )
     )
 
-    # Launch Description
+
     ld.add_action(x_arg)
     ld.add_action(y_arg)
     ld.add_action(z_arg)
     ld.add_action(gazebo)
-    #ld.add_action(controller_manager_node)  # has to be loaded first
+    #ld.add_action(controller_manager_node)
     ld.add_action(spawn_the_robot)
     ld.add_action(robot_state_publisher)
     ld.add_action(move_group_node)
     ld.add_action(gz_sim_bridge)
-    # delay of the controllers
+
     ld.add_action(delay_joint_state_broadcaster)
     ld.add_action(delay_arm_controller)
     ld.add_action(delay_rviz_node)

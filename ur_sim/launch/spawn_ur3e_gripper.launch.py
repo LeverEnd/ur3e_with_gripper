@@ -19,12 +19,10 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def launch_setup(context, *args, **kwargs):
-    # Initialize Arguments
     ur_type = LaunchConfiguration("ur_type")
     safety_limits = LaunchConfiguration("safety_limits")
     safety_pos_margin = LaunchConfiguration("safety_pos_margin")
     safety_k_position = LaunchConfiguration("safety_k_position")
-    # General arguments
     runtime_config_package = LaunchConfiguration("runtime_config_package")
     controllers_file = LaunchConfiguration("controllers_file")
     description_package = LaunchConfiguration("description_package")
@@ -100,7 +98,6 @@ def launch_setup(context, *args, **kwargs):
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
-    # Delay rviz start after `joint_state_broadcaster`
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
@@ -109,7 +106,6 @@ def launch_setup(context, *args, **kwargs):
         condition=IfCondition(launch_rviz),
     )
 
-    # There may be other controllers of the joints, but this is the initially-started one
     initial_joint_controller_spawner_started = Node(
         package="controller_manager",
         executable="spawner",
@@ -123,7 +119,6 @@ def launch_setup(context, *args, **kwargs):
         condition=UnlessCondition(start_joint_controller),
     )
 
-    # GZ nodes
     gz_spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
@@ -161,7 +156,6 @@ def launch_setup(context, *args, **kwargs):
         condition=UnlessCondition(gazebo_gui),
     )
 
-    # Make the /clock topic available in ROS
     gz_sim_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -189,7 +183,6 @@ def launch_setup(context, *args, **kwargs):
 
 def generate_launch_description():
     declared_arguments = []
-    # UR specific arguments
     declared_arguments.append(
         DeclareLaunchArgument(
             "ur_type",
@@ -232,7 +225,6 @@ def generate_launch_description():
             description="k-position factor in the safety controller.",
         )
     )
-    # General arguments
     declared_arguments.append(
         DeclareLaunchArgument(
             "runtime_config_package",
