@@ -4,10 +4,12 @@ import rclpy
 from rclpy.node import Node
 from rclpy.logging import get_logger
 import time
-from geometry_msgs.msg import PoseStamped, Pose
+from geometry_msgs.msg import PoseStamped
 from pymoveit2 import MoveIt2
+from moveit_msgs.msg import CollisionObject
+from shape_msgs.msg import SolidPrimitive
+from geometry_msgs.msg import Pose
 import math
-import subprocess
 
 def main():
     rclpy.init()
@@ -84,6 +86,8 @@ def main():
                           cube_1_pos.orientation.z,
                           cube_1_pos.orientation.w]
 
+    arm.remove_collision_object(CUBE_1_NAME)
+
     arm.add_collision_box(
         CUBE_1_NAME,
         cube_1_size,
@@ -100,6 +104,8 @@ def main():
                           cube_2_pos.orientation.y,
                           cube_2_pos.orientation.z,
                           cube_2_pos.orientation.w]
+
+    arm.remove_collision_object(CUBE_2_NAME)
 
     arm.add_collision_box(
         CUBE_2_NAME,
@@ -118,6 +124,8 @@ def main():
                           cube_3_pos.orientation.z,
                           cube_3_pos.orientation.w]
 
+    arm.remove_collision_object(CUBE_3_NAME)
+
     arm.add_collision_box(
         CUBE_3_NAME,
         cube_3_size,
@@ -134,20 +142,18 @@ def main():
     arm.move_to_configuration(cube1_2)
     arm.wait_until_executed()
 
+    close = [0.4]
     time.sleep(1.0)
     arm.attach_collision_object(CUBE_1_NAME, "tool0", touch_links)
     time.sleep(1.0)
-
-    close = [0.4]
     gripper.move_to_configuration(close)
     gripper.wait_until_executed()
-    time.sleep(1.0)
 
     cube1_3 = [-2.46, -3.14, 0.26, -3.23, -1.83, 0.0]
     arm.move_to_configuration(cube1_3)
     arm.wait_until_executed()
 
-    base1_1 = [-4.71, -2.48, -1.62, -2.18, -1.57, 0.0]
+    base1_1 = [-4.71, -2.39, -1.57, -2.39, -1.57, 0.0]
     arm.move_to_configuration(base1_1)
     arm.wait_until_executed()
 
@@ -159,32 +165,37 @@ def main():
     arm.detach_collision_object(CUBE_1_NAME)
     time.sleep(1.0)
 
+    logger.info("base1_2 elott")
     base1_2 = [-4.71, -2.22, -1.92, -2.22, -1.57, 0.0]
     arm.move_to_configuration(base1_2)
+    logger.info("base1_2 kozben")
     arm.wait_until_executed()
+    logger.info("base1_2 utan")
 
     cube2_1 = [-1.6, -2.35, -1.57, -2.35, -1.74, 0.0]
     arm.move_to_configuration(cube2_1)
+    logger.info("cube2_1")
     arm.wait_until_executed()
 
-    cube2_2 = [-1.59, -2.63, -1.29, -2.34, -1.73, 0.0]
+    cube2_2 = [-1.6, -2.55, -1.37, -2.35, -1.74, 0.0]
     arm.move_to_configuration(cube2_2)
+    logger.info("cube2_2")
     arm.wait_until_executed()
 
     time.sleep(1.0)
     arm.attach_collision_object(CUBE_2_NAME, "tool0", touch_links)
     time.sleep(1.0)
-
     gripper.move_to_configuration(close)
     gripper.wait_until_executed()
-    time.sleep(1.0)
 
-    cube2_3 = [-1.59, -2.55, -1.37, -2.09, -1.73, 0.0]
+    cube2_3 = [-1.6, -2.55, -1.37, -2.09, -1.74, 0.0]
     arm.move_to_configuration(cube2_3)
+    logger.info("cube2_3")
     arm.wait_until_executed()
 
-    base2_1 = [-4.73, -2.32, -1.5, -2.46, -1.59, 0.0]
+    base2_1 = [-4.73, -2.21, -1.55, -2.53, -1.59, 0.0]
     arm.move_to_configuration(base2_1)
+    logger.info("base2_1")
     arm.wait_until_executed()
 
     gripper.move_to_configuration(open)
@@ -196,25 +207,24 @@ def main():
 
     base2_2 = [-4.73, -2.21, -1.55, -2.2, -1.59, 0.0]
     arm.move_to_configuration(base2_2)
+    logger.info("base2_2")
     arm.wait_until_executed()
 
     cube3_1 = [1.76, -1.48, 1.69, -1.76, -1.6, 2.3]
     arm.move_to_configuration(cube3_1)
     arm.wait_until_executed()
 
-    cube3_2 = [1.8, -1.29, 1.85, -2.12, -1.59, 2.35]
+    cube3_2 = [1.75, -1.38, 1.94, -2.13, -1.6, 2.3]
     arm.move_to_configuration(cube3_2)
     arm.wait_until_executed()
 
     time.sleep(1.0)
     arm.attach_collision_object(CUBE_3_NAME, "tool0", touch_links)
     time.sleep(1.0)
-
     gripper.move_to_configuration(close)
     gripper.wait_until_executed()
-    time.sleep(1.0)
 
-    cube3_3 = [1.8, -1.48, 1.69, -1.76, -1.59, 2.35]
+    cube3_3 = [1.76, -1.48, 1.69, -1.76, -1.6, 2.3]
     arm.move_to_configuration(cube3_3)
     arm.wait_until_executed()
 
@@ -228,14 +238,6 @@ def main():
     time.sleep(1.0)
     arm.detach_collision_object(CUBE_3_NAME)
     time.sleep(1.0)
-
-    base3_2 = [1.57, -2.0, -1.83, 3.87, -1.57, 0.0]
-    arm.move_to_configuration(base3_2)
-    arm.wait_until_executed()
-
-    stand = [0.0, -1.57, 0.0, 0.0, 0.0, 1.57]
-    arm.move_to_configuration(stand)
-    arm.wait_until_executed()
 
     rclpy.shutdown()
 

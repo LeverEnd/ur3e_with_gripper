@@ -43,7 +43,7 @@
         <pose >0.58 0.38 0.03 0 0 1</pose>
         <link name="link">
         <inertial>
-            <mass>0.1</mass>
+            <mass>0.2</mass>
             <inertia>
             <ixx>0.166667</ixx>
             <ixy>0</ixy>
@@ -89,10 +89,10 @@
         </link>
     </model>
     <model name="box2">
-        <pose >0.1 0.6 0.03 0 0 0.2</pose>
+        <pose >0.11 0.6 0.03 0 0 0.15</pose>
         <link name="link">
         <inertial>
-            <mass>0.1</mass>
+            <mass>0.2</mass>
             <inertia>
             <ixx>0.166667</ixx>
             <ixy>0</ixy>
@@ -141,7 +141,7 @@
         <pose >-0.2 0.3 0.03 0 0 -0.5</pose>
         <link name="link">
         <inertial>
-            <mass>0.1</mass>
+            <mass>0.2</mass>
             <inertia>
             <ixx>0.166667</ixx>
             <ixy>0</ixy>
